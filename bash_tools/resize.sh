@@ -20,18 +20,18 @@
 set -o nounset                              # Treat unset variables as an error
 
 
-files=`ls | grep -i jpg`
+
 count=0
 mkdir resized
 echo "TODO" > resized/info.txt
 mkdir resized/thmb
 mkdir resized/thmb_s
-for file in $files
+find . -iname "*jpg" | while read file
 do
-  convert -auto-orient -resize 800x600 $file resized/img_$count.jpg
-  convert -auto-orient -resize 200x160 -quality 50% $file resized/thmb/img_$count.jpg
-  convert -auto-orient -resize 80x60 -quality 50% $file resized/thmb_s/img_$count.jpg
-  echo $count
+  convert -auto-orient -resize 800x600 "$file" resized/img_$count.jpg
+  convert -auto-orient -resize 200x160 -quality 50% "$file" resized/thmb/img_$count.jpg
+  convert -auto-orient -resize 80x60 -quality 50% "$file" resized/thmb_s/img_$count.jpg
+  echo $file
   count=$(($count + 1))
 done
 

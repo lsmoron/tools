@@ -2,7 +2,7 @@ var request = require('superagent')
 var Future = require('fibers/future'), wait = Future.wait;
 var fs = require('fs');
 var csv = require('csv');
-var strftime = require('strftime')
+
 var Fiber = require('fibers');
 var fileName = process.argv[2]
 var urlBase = "http://tauto02:7080/ReportService/"
@@ -13,19 +13,21 @@ var testCases = {}
 function sleep(r, i) {
     setTimeout(function () {
         console.log(i)
-        Fiber.current.run();
-    }, 10);
-    Fiber.yield();
+    }, 100);
 }
 
 
-Fiber(function () {
+console.log("Start")
 
-    csv()
+
+  var parser =  csv()
         .from.path(__dirname + '/s10.csv', { delimiter: ',', escape: '"' })
-        .on('record', sleep)
+        .on('record', function (r,i){
+          sleep(r,i)      
+          this.pause()    
+        })
         .on('error', function (error) {
             console.log(error.message);
         });
+       
 
-}).run()
